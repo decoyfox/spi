@@ -87,28 +87,29 @@ rhel6 ()	{
 # Function for RHEL 7 Linux distributions
 rhel7 ()	{
 	# Installing necessary packages (Squid, httpd-tools for htpasswd and dependencies)
-	echo "line 90"
+	exec 3>&1 1>>${LOG_FILE} 2>&1
+	echo "at top of function"
 	yum install squid httpd-tools -y
 	# Asking user to set a username via read and writing it into $usrn
 	# read -e -p "Your desired username: " usrn
 	username="proxypal"
-	echo "line 95"
+	echo "line 96"
 	#password=`tr -dc a-z0-9_ < /dev/urandom | head -c 10`
 	password="123"
 	htpasswd -cb /etc/squid/passwd username $password
 	# Downloading Squid configuration 
-	echo "line 100"
+	echo "line 101"
 	wget -O /etc/squid/squid.conf https://raw.githubusercontent.com/hidden-refuge/squid-proxy-installer/master/spi-rhel7.conf --no-check-certificate
 	# Creating empty blacklist.acl file for further blacklisting entries
 	touch /etc/squid/blacklist.acl
 	
-	echo "line 105"
+	echo "line 106"
 	
 	# Restarting Squid and enabling its service
 	systemctl restart squid.service && systemctl enable squid.service
 	# Running function firew2
 	firew2
-	echo "END OF FUNCTION"
+	echo "END OF FUNCTION!"
 }
 
 # Function for Debian "Squeeze" 6 and Debian "Wheezy" 7
